@@ -1,13 +1,14 @@
 [build]
-  command = "pnpm --filter @workspace/sip-calculator... run build"
-  publish = "artifacts/sip-calculator/dist"
-
-[build.environment]
-  PORT = "5000"
-  BASE_PATH = "/"
+  command = "pnpm build"
+  publish = "dist"
 
 [functions]
-  directory = "artifacts/sip-calculator/netlify/functions"
+  directory = "netlify/functions"
+
+[dev]
+  framework = "vite"
+  targetPort = 5000
+  port = 8888
 
 [[redirects]]
   from = "/*"

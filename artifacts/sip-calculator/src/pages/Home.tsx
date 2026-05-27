@@ -10,8 +10,28 @@ export default function Home() {
     React.useEffect(() => {
         async function loadRates() {
             try {
-                const response = await fetch("/.netlify/functions/metals-rates");
-                const data = await response.json();
+                const [goldRes, silverRes] = await Promise.all([
+    fetch("https://www.goldapi.io/api/XAU/INR", {
+        headers: {
+            "x-access-token": import.meta.env.VITE_GOLDAPI_KEY,
+            "Content-Type": "application/json",
+        },
+    }),
+    fetch("https://www.goldapi.io/api/XAG/INR", {
+        headers: {
+            "x-access-token": import.meta.env.VITE_GOLDAPI_KEY,
+            "Content-Type": "application/json",
+        },
+    }),
+]);
+
+const gold = await goldRes.json();
+const silver = await silverRes.json();
+
+const data = {
+    gold10g: gold.price_gram_24k * 10,
+    silver10g: silver.price_gram_24k * 10,
+};
                 setMetalRates(data);
             } catch {
                 setMetalRates(null);

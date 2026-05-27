@@ -1,11 +1,11 @@
-export default async () => {
+exports.handler = async function () {
     const apiKey = process.env.GOLDAPI_KEY;
 
     if (!apiKey) {
-        return Response.json(
-            { error: "GOLDAPI_KEY is missing" },
-            { status: 500 }
-        );
+        return {
+            statusCode: 500,
+            body: JSON.stringify({ error: "GOLDAPI_KEY is missing" }),
+        };
     }
 
     try {
@@ -27,15 +27,18 @@ export default async () => {
         const gold = await goldRes.json();
         const silver = await silverRes.json();
 
-        return Response.json({
-            gold10g: gold.price_gram_24k * 10,
-            silver10g: silver.price_gram_24k * 10,
-            updatedAt: new Date().toISOString(),
-        });
-    } catch (error) {
-        return Response.json(
-            { error: "Failed to fetch metal rates" },
-            { status: 500 }
-        );
+        return {
+            statusCode: 200,
+            body: JSON.stringify({
+                gold10g: gold.price_gram_24k * 10,
+                silver10g: silver.price_gram_24k * 10,
+                updatedAt: new Date().toISOString(),
+            }),
+        };
+    } catch {
+        return {
+            statusCode: 500,
+            body: JSON.stringify({ error: "Failed to fetch metal rates" }),
+        };
     }
 };
