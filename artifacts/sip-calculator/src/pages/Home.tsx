@@ -9,31 +9,15 @@ export default function Home() {
     const [metalLoading, setMetalLoading] = React.useState(true);
     React.useEffect(() => {
         async function loadRates() {
+            const cacheKey = "growwvesta_metal_rates";
+const cacheTimeKey = "growwvesta_metal_rates_time";
+const sixHours = 0;
             try {
-                const [goldRes, silverRes] = await Promise.all([
-    fetch("https://www.goldapi.io/api/XAU/INR", {
-        headers: {
-            "x-access-token": import.meta.env.VITE_GOLDAPI_KEY,
-            "Content-Type": "application/json",
-        },
-    }),
-    fetch("https://www.goldapi.io/api/XAG/INR", {
-        headers: {
-            "x-access-token": import.meta.env.VITE_GOLDAPI_KEY,
-            "Content-Type": "application/json",
-        },
-    }),
-]);
-
-const gold = await goldRes.json();
-const silver = await silverRes.json();
-
-const data = {
-    gold10g: gold.price_gram_24k * 10,
-    silver10g: silver.price_gram_24k * 10,
-};
-                setMetalRates(data);
-            } catch {
+              const response = await fetch("/.netlify/functions/metals-rates");
+const data = await response.json();
+setMetalRates(data);
+            } catch (error) {
+                console.error("Metal rate fetch failed:", error);
                 setMetalRates(null);
             } finally {
                 setMetalLoading(false);
@@ -145,20 +129,20 @@ const data = {
 
                         <div className="flex flex-col sm:flex-row gap-4">
                             <Link href="/calculators/sip-calculator">
-                                <a className="h-[92px] w-full sm:w-[360px] inline-flex items-center justify-center rounded-2xl bg-emerald-400 text-lg font-semibold text-slate-950 transition-all duration-300 hover:bg-emerald-300 hover:shadow-[0_0_40px_rgba(16,185,129,0.4)]">
+                                <a className="inline-flex justify-center rounded-xl bg-emerald-400 px-7 py-4 font-bold text-slate-950 hover:bg-emerald-300 transition shadow-[0_0_35px_rgba(52,211,153,0.35)]">
                                     Open SIP Calculator →
                                 </a>
                             </Link>
 
                             <a
                                 href="#calculators"
-                                className="h-[92px] w-full sm:w-[360px] inline-flex items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] text-lg font-bold text-white transition-all duration-300 hover:border-emerald-400/30 hover:bg-white/[0.06]"
+                                className="inline-flex justify-center rounded-xl border border-white/10 bg-white/5 px-7 py-4 font-bold text-white hover:bg-white/10 transition"
                             >
                                 Explore Calculators
                             </a>
                         </div>
-                        <div className="mt-10 grid sm:grid-cols-2 gap-5 max-w-4xl">
-                            <div className="h-[92px] rounded-2xl border border-yellow-400/25 bg-yellow-400/10 px-6 py-4 backdrop-blur-xl flex items-center justify-between shadow-[0_0_25px_rgba(250,204,21,0.08)]">
+                        <div className="mt-10 grid sm:grid-cols-2 gap-4 max-w-2xl">
+                            <div className="rounded-2xl border border-yellow-400/25 bg-yellow-400/10 px-5 py-4 backdrop-blur-xl shadow-[0_0_25px_rgba(250,204,21,0.08)]">
                                 <div className="flex items-center justify-between gap-4">
                                     <div className="flex items-center gap-3">
                                         <div className="h-11 w-11 rounded-full bg-yellow-400/20 border border-yellow-300/30 flex items-center justify-center">
@@ -177,11 +161,11 @@ const data = {
 
                                     <div className="text-right">
                                         <p className="text-xl font-extrabold text-yellow-300">
-                                           {metalLoading
-                                             ? "--"
-                                             : metalRates?.gold10g
-                                             ? `₹${Math.round(metalRates.gold10g).toLocaleString("en-IN")}`
-                                             : "--"}
+                                            {metalLoading
+                                                ? "--"
+                                                : metalRates?.gold?.pricePerOunce
+                                                    ? `₹${Math.round(metalRates.gold.pricePerOunce * 85).toLocaleString()}`
+                                                    : "--"}
                                         </p>
                                         <p className="text-xs text-emerald-300">Live Rate</p>
                                     </div>
@@ -209,8 +193,8 @@ const data = {
                                         <p className="text-xl font-extrabold text-slate-100">
                                             {metalLoading
                                                 ? "--"
-                                                    : metalRates?.silver10g
-                                                    ? `₹${Math.round(metalRates.silver10g).toLocaleString("en-IN")}`
+                                                : metalRates?.silver?.pricePerOunce
+                                                    ? `₹${Math.round(metalRates.silver.pricePerOunce * 85).toLocaleString()}`
                                                     : "--"}
                                         </p>
                                         <p className="text-xs text-emerald-300">Live Rate</p>
@@ -327,7 +311,7 @@ const data = {
                                 {chartBars.map((height, index) => (
                                     <div
                                         key={index}
-                                        className="h-[92px] w-full sm:w-[360px] inline-flex items-center justify-center rounded-2xl bg-emerald-400 text-lg font-bold text-slate-950 transition-all duration-300 hover:bg-emerald-300 hover:shadow-[0_0_40px_rgba(16,185,129,0.4)]"
+                                        className="flex-1 rounded-t-lg bg-gradient-to-t from-emerald-500 to-cyan-300 shadow-[0_0_18px_rgba(52,211,153,0.35)]"
                                         style={{ height }}
                                     />
                                 ))}
