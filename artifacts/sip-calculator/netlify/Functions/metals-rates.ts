@@ -29,7 +29,7 @@ export default async () => {
 
         return Response.json({
             gold10g: gold.price_gram_24k * 10,
-            silver1kg: silver.price * 32.1507,
+            silver10g: silver.price_gram_24k * 10,
             updatedAt: new Date().toISOString(),
         });
     } catch (error) {

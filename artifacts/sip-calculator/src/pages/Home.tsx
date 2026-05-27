@@ -157,11 +157,11 @@ export default function Home() {
 
                                     <div className="text-right">
                                         <p className="text-xl font-extrabold text-yellow-300">
-                                            {metalLoading
-                                                ? "--"
-                                                : metalRates?.gold?.pricePerOunce
-                                                    ? `₹${Math.round(metalRates.gold.pricePerOunce * 85).toLocaleString()}`
-                                                    : "--"}
+                                           {metalLoading
+                                             ? "--"
+                                             : metalRates?.gold10g
+                                             ? `₹${Math.round(metalRates.gold10g).toLocaleString("en-IN")}`
+                                             : "--"}
                                         </p>
                                         <p className="text-xs text-emerald-300">Live Rate</p>
                                     </div>
@@ -189,8 +189,8 @@ export default function Home() {
                                         <p className="text-xl font-extrabold text-slate-100">
                                             {metalLoading
                                                 ? "--"
-                                                : metalRates?.silver?.pricePerOunce
-                                                    ? `₹${Math.round(metalRates.silver.pricePerOunce * 85).toLocaleString()}`
+                                                    : metalRates?.silver10g
+                                                    ? `₹${Math.round(metalRates.silver10g).toLocaleString("en-IN")}`
                                                     : "--"}
                                         </p>
                                         <p className="text-xs text-emerald-300">Live Rate</p>
